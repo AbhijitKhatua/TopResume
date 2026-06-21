@@ -11,6 +11,11 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+export const metadata = {
+  title: "Top Resume",
+  description: "Build Resume on the go",
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
