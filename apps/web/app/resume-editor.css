@@ -1,0 +1,127 @@
+.tiptap-field .tiptap.ProseMirror {
+  outline: none;
+  min-height: 1.4em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Hyperlinks in both the editor and the read-only preview. */
+.tiptap-field a,
+.resume-rich-text a {
+  color: var(--resume-accent, #2563eb);
+  text-decoration: underline;
+}
+
+.tiptap-field p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--muted-foreground);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+.tiptap-field ul,
+.tiptap-field ol,
+.resume-rich-text ul,
+.resume-rich-text ol {
+  padding-left: 1.25em;
+  margin-block: 0.35em;
+}
+
+/* Collapse the leading/trailing margin of whatever node happens to be first
+   or last (p, ul/ol, or a heading) so a single-line element's content lines
+   up with its right-aligned date, and no stray space is left after it. */
+.tiptap-field > .tiptap.ProseMirror > :first-child,
+.resume-rich-text > :first-child {
+  margin-top: 0;
+}
+
+.tiptap-field > .tiptap.ProseMirror > :last-child,
+.resume-rich-text > :last-child {
+  margin-bottom: 0;
+}
+
+/* A little extra breathing room *between* list items only — never before the
+   first or after the last. `.tiptap-field` is a flex item (a block formatting
+   context), so a leading/trailing `li` margin can't collapse away: it would
+   push the first bullet below the grip and leave a stray gap under the last
+   one. Spacing siblings instead keeps a single-item list tight. */
+.tiptap-field li + li,
+.resume-rich-text li + li {
+  margin-top: 0.4em;
+}
+
+.tiptap-field li > p,
+.resume-rich-text li > p {
+  margin: 0;
+}
+
+.resume-rich-text ul {
+  list-style: disc;
+}
+
+.resume-rich-text ol {
+  list-style: decimal;
+}
+
+.tiptap-field ul {
+  list-style: disc;
+}
+
+.tiptap-field ol {
+  list-style: decimal;
+}
+
+.resume-rich-text p:empty::before {
+  content: "\00a0";
+}
+
+/* Headings can now appear inline within a mixed rich-text element, so give
+   each level a distinct (but modest) size/weight relative to the body text. */
+.tiptap-field h2,
+.tiptap-field h3,
+.tiptap-field h4,
+.tiptap-field h5,
+.resume-rich-text h2,
+.resume-rich-text h3,
+.resume-rich-text h4,
+.resume-rich-text h5 {
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0.5em 0 0.15em;
+}
+
+.tiptap-field h2,
+.resume-rich-text h2 {
+  font-size: 1.05em;
+}
+
+.tiptap-field h3,
+.resume-rich-text h3 {
+  font-size: 1em;
+}
+
+.tiptap-field h4,
+.resume-rich-text h4 {
+  font-size: 0.95em;
+}
+
+.tiptap-field h5,
+.resume-rich-text h5 {
+  font-size: 0.9em;
+}
+
+/* Indeterminate loading bar (used while the resume loads from the database). */
+@keyframes resume-loading-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(600%);
+  }
+}
+
+.resume-loading-bar {
+  width: 18%;
+  animation: resume-loading-slide 1.15s ease-in-out infinite;
+}

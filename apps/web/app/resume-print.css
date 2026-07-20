@@ -1,0 +1,76 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+  }
+
+  /* Hide the app chrome: toolbar, sidebar, resize handle, measurement clone,
+     and any helper text explicitly opted out of printing. */
+  [data-no-print] {
+    display: none !important;
+  }
+
+  /* Collapse the flex/scroll shell (fixed heights + overflow) so the preview
+     flows straight onto the printed page instead of being clipped inside a
+     scroll box. `display: contents` drops these wrappers' boxes entirely. */
+  [data-print-passthrough] {
+    display: contents !important;
+  }
+
+  /* Preserve theme colors/backgrounds (sidebar panels, gradients, accents)
+     instead of the browser stripping them for ink saving. */
+  #resume-preview,
+  #resume-preview * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Drop the on-screen canvas centering, vertical gaps and muted background. */
+  #resume-preview {
+    display: block !important;
+    background: transparent !important;
+  }
+
+  #resume-preview > .flex {
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  /* Each A4 sheet the app paginated becomes exactly one physical printed page.
+     Pin the height to a full sheet (297mm) rather than letting it shrink to the
+     content: a fixed height makes the theme background (gradient/pattern/color,
+     painted on this element) fill the whole sheet instead of leaving the space
+     below short content white. 297mm matches the @page box exactly (the on-screen
+     1123px is ~297.13mm, i.e. slightly OVER a sheet, which is what used to spill
+     onto a blank page), and overflow:hidden clips any sub-pixel excess. */
+  .resume-page {
+    width: 100% !important;
+    height: 297mm !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    break-inside: avoid;
+  }
+
+  /* Start every page after the first on a fresh sheet. Using break-before
+     (rather than break-after) avoids leaving a trailing blank page. */
+  .resume-page + .resume-page {
+    break-before: page;
+  }
+
+  /* Keep individual sections and column rows from splitting across pages. */
+  .resume-preview-block,
+  .resume-preview-row {
+    break-inside: avoid;
+  }
+}
