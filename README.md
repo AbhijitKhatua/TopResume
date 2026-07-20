@@ -40,7 +40,6 @@ and follows you across devices.
 - **Photo + contact header** — upload a photo and manage links/contact details.
 - **WYSIWYG PDF export** — "Download PDF" prints the live preview through the
   browser, so the PDF matches exactly what you see (selectable, searchable text).
-- **Word export** — download a `.docx` version of your resume.
 - **Accounts & autosave** — sign in with email/password, Google, or Apple
   (Better Auth); every edit autosaves to a per-user Postgres row on Neon.
 - **Photo storage** — photos are downscaled client-side and stored in Vercel
@@ -80,26 +79,18 @@ and follows you across devices.
 
 ## Getting started
 
-Prerequisites: [bun](https://bun.sh/) `1.3+`, Node.js `>=20`, and a
-[Neon](https://neon.tech/) Postgres database (free tier is fine for local dev).
+Prerequisites: [bun](https://bun.sh/) `1.3+` and Node.js `>=20`.
 
 ```bash
 # Install dependencies
 bun install
 
 # Configure the builder app (database, auth, blob storage)
-cp apps/web/.env.example apps/web/.env.local   # then fill in the values —
-                                                # see "Environment variables" below
-
-# Push the schema to your database (run from apps/web)
-cd apps/web && bun run db:push && cd ../..
+cp apps/web/.env.example apps/web/.env.local   # then fill in the values
 
 # Start the dev servers (web → :3000, site → :3001)
 bun dev
 ```
-
-The `site` app (marketing/docs) runs standalone and needs no environment
-variables. Only `web` (the builder) needs the `.env.local` from the step above.
 
 ### Common scripts
 
@@ -113,34 +104,6 @@ Run from the repo root (they fan out through Turborepo):
 | `bun run format` | Format with Prettier                 |
 | `bun typecheck`  | Type-check all packages              |
 
-Database scripts (Drizzle) are scoped to `apps/web` — run them with
-`cd apps/web && bun run <script>`:
-
-| Command             | Description                                    |
-| ------------------- | ----------------------------------------------- |
-| `db:generate`       | Generate a new migration from schema changes     |
-| `db:migrate`        | Apply pending migrations                         |
-| `db:push`           | Push the current schema straight to the database (fastest for local dev) |
-| `db:studio`         | Open Drizzle Studio to browse/edit data          |
-
-## Environment variables
-
-Only `apps/web` needs configuration — copy `apps/web/.env.example` to
-`apps/web/.env.local` and fill in:
-
-| Variable                                                    | Needed for                                                          |
-| ------------------------------------------------------------ | -------------------------------------------------------------------- |
-| `DATABASE_URL`                                                | Neon Postgres connection string (pooled)                             |
-| `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `BETTER_AUTH_TRUSTED_ORIGINS` | Auth session signing and allowed origins                    |
-| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`                     | "Sign in with Google"                                                |
-| `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`, `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_PRIVATE_KEY` | "Sign in with Apple" |
-| `BLOB_READ_WRITE_TOKEN`                                        | Vercel Blob storage for uploaded photos                              |
-
-Every variable is commented in `apps/web/.env.example` with where to get it
-(Neon dashboard, Google Cloud Console, Apple Developer portal, Vercel).
-Email/password sign-in works without any OAuth variables set — only add the
-Google/Apple ones if you need to test those sign-in flows locally.
-
 ## How it works
 
 The entire resume lives in a single `ResumeData` object managed by a reducer
@@ -152,11 +115,10 @@ is why the output matches the editor exactly.
 
 ## Releases
 
-Releases are fully automated with [semantic-release](https://semantic-release.gitbook.io/):
-every push to `main` is scanned for [Conventional Commits](https://www.conventionalcommits.org/)
-(see [VERSIONING.md](./VERSIONING.md)), and if the commits warrant a release,
-it bumps the version, updates `CHANGELOG.md`, tags the commit, and publishes
-a GitHub Release automatically. No manual version input or release PR needed.
+Releases are automated with GitHub Actions: run **Prepare release** from the
+Actions tab with a version (e.g. `0.5.0` or `0.5.0-alpha.1`), merge the PR it
+opens, and **Publish release** tags and publishes the GitHub Release —
+`-alpha`/`-beta`/`-rc` versions are flagged as pre-releases automatically.
 
 ## Contributing
 
