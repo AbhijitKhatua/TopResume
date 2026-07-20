@@ -53,7 +53,14 @@ When you change the persisted data shape:
 
 ## Release process
 
-1. Ensure `bun run lint` and `bun typecheck` pass.
-2. Update the version in `package.json` following the rules above.
-3. Update the changelog / release notes.
-4. Tag the release (`git tag vX.Y.Z`) and push tags.
+Releases are fully automated by [semantic-release](https://semantic-release.gitbook.io/)
+(`.github/workflows/release.yml`). On every push to `main` it inspects the
+commits since the last release, decides the version bump from the table
+above, and — if one is warranted — updates `CHANGELOG.md` and both
+`package.json` files, tags the commit (`vX.Y.Z`), and publishes a GitHub
+Release. There's no manual version input and no release PR: if the pushed
+commits don't warrant a release (e.g. only `docs:`/`chore:`), nothing happens.
+
+This means commit message accuracy matters — use the prefixes above (and
+`!`/`BREAKING CHANGE:` for breaking changes) so the automated bump is
+correct.

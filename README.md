@@ -152,10 +152,11 @@ is why the output matches the editor exactly.
 
 ## Releases
 
-Releases are automated with GitHub Actions: run **Prepare release** from the
-Actions tab with a version (e.g. `0.5.0` or `0.5.0-alpha.1`), merge the PR it
-opens, and **Publish release** tags and publishes the GitHub Release —
-`-alpha`/`-beta`/`-rc` versions are flagged as pre-releases automatically.
+Releases are fully automated with [semantic-release](https://semantic-release.gitbook.io/):
+every push to `main` is scanned for [Conventional Commits](https://www.conventionalcommits.org/)
+(see [VERSIONING.md](./VERSIONING.md)), and if the commits warrant a release,
+it bumps the version, updates `CHANGELOG.md`, tags the commit, and publishes
+a GitHub Release automatically. No manual version input or release PR needed.
 
 ## Contributing
 
