@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { createDefaultResumeData } from "./default-state"
+import { createDefaultResumeData, RESUME_DATA_VERSION } from "./default-state"
 import type { ResumeAction } from "./reducer"
 import type { ResumeData } from "./types"
 
@@ -18,10 +18,19 @@ export function clearResumeStorage() {
   }
 }
 
+// The oldest shape we still know how to upgrade. Anything at or above this
+// version is handed to LOAD_STATE, whose `normalizeLoaded` fills in the fields
+// newer versions added -- so bumping RESUME_DATA_VERSION must never start
+// throwing away saves that are merely a version behind.
+const MIN_SUPPORTED_VERSION = 3
+
 function migrate(data: unknown): ResumeData {
   if (!data || typeof data !== "object") return createDefaultResumeData()
   const candidate = data as Partial<ResumeData>
-  if (candidate.version !== 3 || !candidate.personal || !Array.isArray(candidate.blocks)) {
+  const version = candidate.version
+  const supported =
+    typeof version === "number" && version >= MIN_SUPPORTED_VERSION && version <= RESUME_DATA_VERSION
+  if (!supported || !candidate.personal || !Array.isArray(candidate.blocks)) {
     return createDefaultResumeData()
   }
   return candidate as ResumeData

@@ -4,16 +4,44 @@ import { Check } from "lucide-react"
 
 import { useResumeDispatch, useResumeState } from "@/lib/resume/context"
 import { MAX_PAGE_MARGIN, MIN_PAGE_MARGIN, PAGE_MARGIN_STEP } from "@/lib/resume/page-layout"
+import {
+  MAX_TEXT_SIZE_OFFSET,
+  MIN_TEXT_SIZE_OFFSET,
+  TEXT_SIZE_OFFSET_STEP,
+} from "@/lib/resume/text-size"
 import { THEME_LIST } from "@/lib/resume/themes"
 import { Slider } from "@workspace/ui/components/slider"
 import { cn } from "@workspace/ui/lib/utils"
 
 export function StylePanel() {
-  const { themeId, pageMargin } = useResumeState()
+  const { themeId, pageMargin, textSizeOffset } = useResumeState()
   const dispatch = useResumeDispatch()
 
   return (
     <div className="flex flex-col gap-5 p-4">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-medium">Text size</p>
+          <span className="text-xs text-muted-foreground tabular-nums">
+            {textSizeOffset > 0 ? `+${textSizeOffset}` : textSizeOffset}px
+          </span>
+        </div>
+        <Slider
+          value={[textSizeOffset]}
+          min={MIN_TEXT_SIZE_OFFSET}
+          max={MAX_TEXT_SIZE_OFFSET}
+          step={TEXT_SIZE_OFFSET_STEP}
+          onValueChange={(value) => {
+            const next = Array.isArray(value) ? value[0] : value
+            dispatch({ type: "SET_TEXT_SIZE_OFFSET", offset: next })
+          }}
+        />
+        <p className="text-xs text-muted-foreground">
+          Grows or shrinks every heading, entry and date on the resume together, keeping their
+          relative sizes — a 12px date next to 14px body text becomes 13px and 15px at +1.
+        </p>
+      </div>
+
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <p className="text-xs font-medium">Page margin</p>

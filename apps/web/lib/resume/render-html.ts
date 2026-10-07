@@ -7,6 +7,7 @@ import { TextAlign } from "@tiptap/extension-text-align"
 import { FontSize, TextStyle } from "@tiptap/extension-text-style"
 import { StarterKit } from "@tiptap/starter-kit"
 
+import { withTextSizeOffset } from "./text-size"
 import type { ContentElement } from "./types"
 
 // Must stay in sync with `elementExtensions` so every mark/node the editor can
@@ -54,8 +55,22 @@ function isHtmlEmpty(html: string): boolean {
   return text.length === 0
 }
 
+// Per-word size overrides (the Tiptap FontSize mark) serialize to an inline
+// `font-size`, which no stylesheet can override. Rewrite each one through
+// `calc()` so the global text-size offset reaches them too -- otherwise text
+// with an explicit size would be the only text on the page that ignores the
+// Style panel's slider.
+const INLINE_FONT_SIZE = /font-size:\s*(-?[\d.]+)(px|pt|rem|em)/gi
+
+function applyTextSizeOffset(html: string): string {
+  return html.replace(
+    INLINE_FONT_SIZE,
+    (_match, value: string, unit: string) => `font-size: ${withTextSizeOffset(`${value}${unit}`)}`,
+  )
+}
+
 export function renderElement(element: ContentElement): string {
-  return docToHTML(element.contentJSON)
+  return applyTextSizeOffset(docToHTML(element.contentJSON))
 }
 
 export function isElementEmpty(element: ContentElement): boolean {

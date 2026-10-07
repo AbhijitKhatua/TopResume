@@ -1,4 +1,4 @@
-import { A4_HEIGHT_PX, A4_WIDTH_PX } from "@/lib/resume/page-layout"
+import { A4_HEIGHT_PX, A4_WIDTH_PX, getHeaderPaddingTop } from "@/lib/resume/page-layout"
 
 export function ResumePage({
   margin,
@@ -21,7 +21,7 @@ export function ResumePage({
       <div
         style={{
           padding: margin,
-          paddingTop: header ? Math.round(margin * 0.6) : margin,
+          paddingTop: header ? getHeaderPaddingTop(margin) : margin,
         }}
       >
         {children}

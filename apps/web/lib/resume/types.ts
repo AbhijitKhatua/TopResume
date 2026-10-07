@@ -65,5 +65,10 @@ export interface ResumeData {
   blocks: Block[]
   themeId: ThemeId
   pageMargin: number
+  /**
+   * Pixels added to every text size on the resume (see `text-size.ts`).
+   * 0 means "leave every size exactly as authored".
+   */
+  textSizeOffset: number
   version: number
 }

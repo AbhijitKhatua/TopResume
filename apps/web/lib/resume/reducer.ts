@@ -1,7 +1,8 @@
 import { arrayMove } from "@dnd-kit/sortable"
 
-import { createBlock, createElement } from "./default-state"
+import { createBlock, createElement, RESUME_DATA_VERSION } from "./default-state"
 import { MAX_PAGE_MARGIN, MIN_PAGE_MARGIN } from "./page-layout"
+import { clampTextSizeOffset, DEFAULT_TEXT_SIZE_OFFSET } from "./text-size"
 import type { Block, ContentElement, LinkItem, PersonalInfo, ResumeData, ThemeId } from "./types"
 import { MAX_ELEMENTS_PER_BLOCK } from "./types"
 
@@ -24,6 +25,7 @@ export type ResumeAction =
   | { type: "UPDATE_ELEMENT_CONTENT"; blockId: string; elementId: string; patch: Partial<ContentElement> }
   | { type: "SET_THEME"; themeId: ThemeId }
   | { type: "SET_PAGE_MARGIN"; margin: number }
+  | { type: "SET_TEXT_SIZE_OFFSET"; offset: number }
   | { type: "LOAD_STATE"; data: ResumeData }
   | { type: "RESET"; data: ResumeData }
 
@@ -31,13 +33,23 @@ function updateBlock(blocks: Block[], id: string, fn: (block: Block) => Block): 
   return blocks.map((block) => (block.id === id ? fn(block) : block))
 }
 
-// The right-aligned tag field used to be called `date`. Loaded resumes (from
-// localStorage or the DB) may still carry that key, so map it onto `tag` when
-// hydrating so older saves don't lose their value. Both load paths funnel
-// through LOAD_STATE, making this the single place to normalize.
+// Upgrades a loaded payload to the current shape. Both load paths (localStorage
+// and the DB) funnel through LOAD_STATE, making this the single place to
+// normalize -- and the place to add a migration whenever the stored shape
+// changes. Nothing here may discard user data: fill in what's missing and leave
+// everything else alone.
+//
+//   * The right-aligned tag field used to be called `date`; map it onto `tag`
+//     so older saves don't lose their value.
+//   * v3 payloads predate `textSizeOffset`; default it to "no offset".
 function normalizeLoaded(data: ResumeData): ResumeData {
   return {
     ...data,
+    textSizeOffset:
+      data.textSizeOffset === undefined
+        ? DEFAULT_TEXT_SIZE_OFFSET
+        : clampTextSizeOffset(data.textSizeOffset),
+    version: RESUME_DATA_VERSION,
     blocks: data.blocks.map((block) => ({
       ...block,
       elements: block.elements.map((element) => {
@@ -170,6 +182,9 @@ export function resumeReducer(state: ResumeData, action: ResumeAction): ResumeDa
 
     case "SET_PAGE_MARGIN":
       return { ...state, pageMargin: Math.min(MAX_PAGE_MARGIN, Math.max(MIN_PAGE_MARGIN, action.margin)) }
+
+    case "SET_TEXT_SIZE_OFFSET":
+      return { ...state, textSizeOffset: clampTextSizeOffset(action.offset) }
 
     case "LOAD_STATE":
       return normalizeLoaded(action.data)

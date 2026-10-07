@@ -7,7 +7,8 @@ import { BlockRow } from "@/components/resume/block-row"
 import { PersonalHeaderPreview } from "@/components/resume/personal-header-preview"
 import { ResumePage } from "@/components/resume/resume-page"
 import { useResumeState } from "@/lib/resume/context"
-import { getPageContentWidth } from "@/lib/resume/page-layout"
+import { A4_WIDTH_PX, getPageContentWidth } from "@/lib/resume/page-layout"
+import { TEXT_SIZE_OFFSET_VAR } from "@/lib/resume/text-size"
 import { THEMES } from "@/lib/resume/themes"
 import { useGoogleFonts } from "@/lib/resume/use-google-font"
 import { usePaginatedBlocks } from "@/lib/resume/use-paginated-blocks"
@@ -43,7 +44,11 @@ export function ResumePreview() {
 
   useGoogleFonts(usedFonts)
 
-  const { pages, rows, measureRef } = usePaginatedBlocks(state.blocks, state.pageMargin)
+  const { pages, rows, measureRef } = usePaginatedBlocks(
+    state.blocks,
+    state.pageMargin,
+    state.textSizeOffset,
+  )
 
   // Paint the theme background onto the page itself. `sidebar` themes keep a
   // white page (their color lives in the header band), while flat/gradient/
@@ -68,6 +73,10 @@ export function ResumePreview() {
     "--resume-body-font": `"${theme.bodyFont}", sans-serif`,
     "--resume-bg": theme.background.value,
     "--resume-sidebar-fg": theme.sidebarForeground ?? "#ffffff",
+    // Every text size in the preview is written as `calc(base + this)`, so one
+    // variable on the root rescales the whole sheet -- measurement clone
+    // included, which is what keeps pagination in step with the new sizes.
+    [TEXT_SIZE_OFFSET_VAR]: `${state.textSizeOffset}px`,
     fontFamily: "var(--resume-body-font)",
     color: "#1f2328",
     colorScheme: "light",
@@ -83,14 +92,20 @@ export function ResumePreview() {
           position: "absolute",
           visibility: "hidden",
           pointerEvents: "none",
-          width: getPageContentWidth(state.pageMargin),
+          // Full sheet width: the header renders full-bleed across the page, so
+          // measuring it inside the content width would wrap its text more than
+          // the real page does and over-state how much room it needs.
+          width: A4_WIDTH_PX,
           top: -99999,
         }}
       >
         <PersonalHeaderPreview />
-        <div>
+        <div style={{ width: getPageContentWidth(state.pageMargin) }}>
           {rows.map((row) => (
-            <div key={row.id}>
+            // `flow-root` stops the row's own bottom margin from collapsing out
+            // through this wrapper -- without it the wrapper measures short by
+            // exactly that margin, and the error compounds per row on the page.
+            <div key={row.id} style={{ display: "flow-root" }}>
               <BlockRow row={row} />
             </div>
           ))}

@@ -2,6 +2,12 @@
 
 import { useResumeState } from "@/lib/resume/context"
 import { photoSrc } from "@/lib/resume/photo"
+import {
+  HEADER_DETAIL_FONT_SIZE,
+  HEADER_NAME_FONT_SIZE,
+  HEADER_TITLE_FONT_SIZE,
+  withTextSizeOffset,
+} from "@/lib/resume/text-size"
 import { THEMES } from "@/lib/resume/themes"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -16,33 +22,58 @@ export function PersonalHeaderPreview() {
   const textContent = (
     <div className="min-w-0 flex-1">
       <h1
-        className="text-3xl font-bold break-words"
-        style={{ fontFamily: "var(--resume-heading-font)" }}
+        className="font-bold break-words"
+        style={{
+          fontFamily: "var(--resume-heading-font)",
+          fontSize: withTextSizeOffset(HEADER_NAME_FONT_SIZE),
+        }}
       >
         {fullName || "Your Name"}
       </h1>
       {personal.title && (
         <p
-          className="mt-0.5 text-lg break-words"
-          style={{ color: isSidebar ? undefined : "var(--resume-accent)" }}
+          className="mt-0.5 break-words"
+          style={{
+            color: isSidebar ? undefined : "var(--resume-accent)",
+            fontSize: withTextSizeOffset(HEADER_TITLE_FONT_SIZE),
+          }}
         >
           {personal.title}
         </p>
       )}
       {contactLine.length > 0 && (
-        <p className={cn("mt-2 text-sm break-words", isSidebar && "opacity-90")} style={isSidebar ? undefined : { color: "#57606a" }}>
+        <p
+          className={cn("mt-2 break-words", isSidebar && "opacity-90")}
+          style={{
+            ...(isSidebar ? {} : { color: "#57606a" }),
+            fontSize: withTextSizeOffset(HEADER_DETAIL_FONT_SIZE),
+          }}
+        >
           {contactLine.join(" · ")}
         </p>
       )}
       {personal.links.length > 0 && (
-        <p className={cn("mt-1 text-sm break-words", isSidebar && "opacity-90")} style={isSidebar ? undefined : { color: "#57606a" }}>
+        <p
+          className={cn("mt-1 break-words", isSidebar && "opacity-90")}
+          style={{
+            ...(isSidebar ? {} : { color: "#57606a" }),
+            fontSize: withTextSizeOffset(HEADER_DETAIL_FONT_SIZE),
+          }}
+        >
           {personal.links
             .filter((l) => l.url)
             .map((l) => l.label || l.url)
             .join(" · ")}
         </p>
       )}
-      {personal.summary && <p className="mt-3 text-sm leading-relaxed break-words">{personal.summary}</p>}
+      {personal.summary && (
+        <p
+          className="mt-3 leading-relaxed break-words"
+          style={{ fontSize: withTextSizeOffset(HEADER_DETAIL_FONT_SIZE) }}
+        >
+          {personal.summary}
+        </p>
+      )}
     </div>
   )
 
