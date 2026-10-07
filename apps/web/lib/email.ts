@@ -1,4 +1,7 @@
-const { RESEND_API_KEY, EMAIL_FROM } = process.env
+const { RESEND_API_KEY } = process.env
+// Tolerate values pasted with surrounding quotes/whitespace (e.g. in the Vercel
+// dashboard, which stores quotes literally), which Resend rejects with a 422.
+const EMAIL_FROM = process.env.EMAIL_FROM?.trim().replace(/^(["'])(.*)\1$/, "$2").trim() || undefined
 
 type Email = { to: string; subject: string; text: string; html: string }
 
