@@ -4,6 +4,11 @@ import { nextCookies } from "better-auth/next-js"
 
 import { db } from "@/lib/db"
 import { account, session, user, verification } from "@/lib/db/schema"
+import { sendEmail } from "@/lib/email"
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)
+}
 
 const {
   BETTER_AUTH_SECRET,
@@ -42,6 +47,17 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    // Signs the user out everywhere once their password has been reset.
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url }) => {
+      // Not awaited so response timing doesn't reveal whether the email exists.
+      void sendEmail({
+        to: user.email,
+        subject: "Reset your Top Resume password",
+        text: `Hi ${user.name},\n\nReset your password using the link below. It expires in 1 hour.\n\n${url}\n\nIf you didn't request this, you can ignore this email.`,
+        html: `<p>Hi ${escapeHtml(user.name)},</p><p>Reset your password using the link below. It expires in 1 hour.</p><p><a href="${escapeHtml(url)}">Reset password</a></p><p>If you didn't request this, you can ignore this email.</p>`,
+      }).catch((err) => console.error("Failed to send password reset email", err))
+    },
   },
   socialProviders: {
     ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET
