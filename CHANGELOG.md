@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/AbhijitKhatua/TopResume/compare/v1.0.1...v1.1.0) (2026-10-07)
+
+
+### Features
+
+* add forgot and reset password flow ([8d2cad4](https://github.com/AbhijitKhatua/TopResume/commit/8d2cad4b3623f43facaacf3580c83b3c1d751cf5))
+* add global text size control to style panel ([3fa223e](https://github.com/AbhijitKhatua/TopResume/commit/3fa223e32042e6e86f653da3a07fb8faf95b8168))
+
 ## [1.0.1](https://github.com/AbhijitKhatua/TopResume/compare/v1.0.0...v1.0.1) (2026-07-20)
 
 
