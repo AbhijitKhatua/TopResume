@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/AbhijitKhatua/TopResume/compare/v1.1.0...v1.1.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* sanitize EMAIL_FROM before sending email ([9f899c7](https://github.com/AbhijitKhatua/TopResume/commit/9f899c79756f75d056e8946b883eee8df6c0ad6e))
+
 # [1.1.0](https://github.com/AbhijitKhatua/TopResume/compare/v1.0.1...v1.1.0) (2026-10-07)
 
 
