@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+
 import { useResumeState } from "@/lib/resume/context"
 import { photoSrc } from "@/lib/resume/photo"
 import {
@@ -62,8 +64,14 @@ export function PersonalHeaderPreview() {
         >
           {personal.links
             .filter((l) => l.url)
-            .map((l) => l.label || l.url)
-            .join(" · ")}
+            .map((l, i) => (
+              <React.Fragment key={l.id}>
+                {i > 0 && " · "}
+                <a href={l.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  {l.label || l.url}
+                </a>
+              </React.Fragment>
+            ))}
         </p>
       )}
       {personal.summary && (
