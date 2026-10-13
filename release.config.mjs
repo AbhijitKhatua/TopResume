@@ -9,13 +9,13 @@ export default {
       "@semantic-release/exec",
       {
         prepareCmd:
-          "npm pkg set version=${nextRelease.version} && (cd apps/web && npm pkg set version=${nextRelease.version})",
+          "npm pkg set version=${nextRelease.version} && (cd apps/web-app && npm pkg set version=${nextRelease.version})",
       },
     ],
     [
       "@semantic-release/git",
       {
-        assets: ["package.json", "apps/web/package.json", "CHANGELOG.md"],
+        assets: ["package.json", "apps/web-app/package.json", "CHANGELOG.md"],
         message: "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
       },
     ],

@@ -1,7 +1,7 @@
 # site — topresume.me
 
 The marketing + docs website, served at the apex domain **topresume.me**.
-The builder app (`apps/web`) lives at **app.topresume.me**.
+The builder app (`apps/web-app`) lives at **app.topresume.me**.
 
 - **Next.js** (App Router, fully static output) + **Tailwind CSS v4**
 - **Lenis** — smooth wheel/touch scrolling (disabled under `prefers-reduced-motion`)
@@ -25,4 +25,4 @@ Create a **second Vercel project** from this same GitHub repo:
 2. Add the domain `topresume.me` (apex) to that project
    (A record `76.76.21.21`, or ALIAS/ANAME if your DNS supports it).
 3. `app.topresume.me` (CNAME `cname.vercel-dns.com`) stays on the builder-app
-   project (Root Directory `apps/web`).
+   project (Root Directory `apps/web-app`).

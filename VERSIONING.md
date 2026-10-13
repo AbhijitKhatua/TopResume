@@ -41,7 +41,7 @@ A commit with `BREAKING CHANGE:` in its body (or a `!` after the type, e.g.
 ## Resume data schema versioning
 
 Saved resumes carry their own `version` number inside the persisted
-`ResumeData` object (see `apps/web/lib/resume/`). This is **independent** of the
+`ResumeData` object (see `apps/web-app/lib/resume/`). This is **independent** of the
 application's release version and exists so the app can migrate resumes stored
 in `localStorage` when the data shape changes.
 

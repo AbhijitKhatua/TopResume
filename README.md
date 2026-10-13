@@ -64,7 +64,7 @@ and follows you across devices.
 ```
 .
 ├── apps/
-│   ├── web/                     # The builder app → app.topresume.me
+│   ├── web-app/                 # The builder app → app.topresume.me
 │   │   ├── app/                 # App Router entry, auth routes, global + print CSS
 │   │   ├── components/resume/   # Editor UI, preview, toolbars, pickers
 │   │   └── lib/                 # Resume state/themes/exports, auth, db
@@ -86,9 +86,9 @@ Prerequisites: [bun](https://bun.sh/) `1.3+` and Node.js `>=20`.
 bun install
 
 # Configure the builder app (database, auth, blob storage)
-cp apps/web/.env.example apps/web/.env.local   # then fill in the values
+cp apps/web-app/.env.example apps/web-app/.env.local   # then fill in the values
 
-# Start the dev servers (web → :3000, site → :3001)
+# Start the dev servers (web-app → :3000, site → :3001)
 bun dev
 ```
 
